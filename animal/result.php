@@ -1,86 +1,93 @@
+<?php session_start(); if($_POST['test']){session_destroy(); header('Location: http://localhost:1337/settings.php');}  ?>
 <!DOCTYPE html>
 <html>
 <head>
 <title>Animal</title>
+<style>
+
+</style>
 </head>
 <body>
 <?php
-abstract class animal {
-    public $anim; 
+if(!$_SESSION){
+    $_SESSION=$_GET;
+}
+if(!$_GET){
+    $_GET=$_SESSION;
+}
+abstract class natur{
+    public $name; 
     public $quan; 
 
-    public function __construct($newAnim, $newQuan) {
-        $this->setMyAnim($newAnim, $newQuan);
+    public function __construct($newName, $newQuan) {
+        $this->setSpec($newName, $newQuan);
     }
     
-    public function setMyAnim($newAnim, $newQuan) {
-        $this->anim = $newAnim;
+    public function setSpec($newName, $newQuan) {
+        $this->name = $newName;
         $this->quan = $newQuan;
     }
-    abstract public function makeSound();
-    
+    abstract public function onclick();
     public function setPhoto(){
-        echo "<img style='margin: 40px; width: 150px; height: 150px;' src= '".$this->image."' onclick='".$this->makeSound()."'  />";
+        if($this->name){
+            for($i=0;$i<$this->quan;$i++){
+              echo "<img style='margin: 40px; width: 150px; height: 150px;' src= '".$this->image."' onclick='".$this->onclick()."'  />";
+            } 
+        }
     }
-
 }
-class apor extends animal {
-    protected $image = './apa.jpg';
-    protected $sound = 'Ooh ooh ahh ahh';
-    public function makeSound() {
+
+class animal extends natur {
+    public function onclick(){
         return  'alert("'.$this->sound.'")';
-    }
+    }  
+}
+
+
+class plant extends natur {
+    public function onclick(){
+        return  'alert("this has not sound!!!")';
+    }  
+}
+
+
+class apor extends animal {  
+    protected $image = './apa.jpg';
+    protected $sound = 'Ooh ooh ahh ahh';   
 }
 class giraffer extends animal {
     protected $image = './giraff.jpg';
     protected $sound = 'aaa aaa aaaaaaa';
-    public function makeSound() {
-        return  'alert("'.$this->sound.'")';
-    }
-    
+   
 }
 class tigrar extends animal {
     protected $image = './tiger.jpg';
     protected $sound = 'grrrrrrrrrrr';
-    public function makeSound() {
-        return  'alert("'.$this->sound.'")';
-    }
-    
 }
-class kamel extends animal {
-    protected $image = './kamel.jpg';
-    protected $sound = 'baaaaaaaaaa';
-    public function makeSound() {
-        return  'alert("'.$this->sound.'")';
-    }
-    
+
+
+class kokosnöt extends plant {
+    protected $image = './Kokosnot.png';
 }
+
 $myApor = new apor($_GET['anim1'],$_GET['quantity1'] );
 $myGiffer = new giraffer($_GET['anim2'],$_GET['quantity2'] );
 $myTigrar = new tigrar($_GET['anim3'],$_GET['quantity3'] );
-$myKamel = new kamel($_GET['anim4'],$_GET['quantity4'] );
+$mykokosnöt = new kokosnöt($_GET['anim4'],$_GET['quantity4'] );
 
-if($_GET['anim1']){
-    for($i=0;$i<$_GET['quantity1'];$i++){
-        $myApor->setPhoto();
-    }
-}
-if($_GET['anim2']){
-    for($i=0;$i<$_GET['quantity2'];$i++){
-        $myGiffer->setPhoto();
-    }
-}
-if($_GET['anim3']){
-    for($i=0;$i<$_GET['quantity3'];$i++){
-        $myTigrar->setPhoto();
-    }
-}
-if($_GET['anim4']){
-    for($i=0;$i<$_GET['quantity4'];$i++){
-        $myKamel->setPhoto();
-    }
-}
+$myApor->setPhoto();
+$myGiffer->setPhoto();
+$myTigrar->setPhoto();
+$mykokosnöt->setPhoto();
 
 ?>
+
+<form method="post" action="<?php echo $_SERVER["PHP_SELF"];?>">
+    <input type="submit" name="test" id="test" value="delete allt" /><br/>
+</form>
+
+
+
+</form>
 </body>
 </html>
